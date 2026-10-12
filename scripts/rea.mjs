@@ -68,7 +68,8 @@ if (!(await compiledRuntimeExists(runtimeFiles))) {
   } else {
     let wroteOutput = false;
     const resultOutput = createStreamedCliJsonOutput(args, process.stdout);
-    await createCli(process.env, resultOutput).serve(args, {
+    const cli = await createCli(process.env, resultOutput, args);
+    await cli.serve(args, {
       stdout: (output) => {
         if (resultOutput?.handled) {
           if (resultOutput.failed) process.stderr.write(output);

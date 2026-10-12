@@ -25,7 +25,7 @@ it("reports invalid nested semantic graph Evidence as caller input through CLI a
     "export function parse(value) { return JSON.parse(value); }\n",
   );
 
-  const cli = createCli({});
+  const cli = await createCli({});
   const analyzed = await serveCli(cli, [
     "analyze-javascript-application",
     root,
@@ -125,7 +125,7 @@ it("reports invalid nested semantic graph Evidence as caller input through CLI a
 });
 
 const assertSuccessfulTraceParity = async (
-  cli: ReturnType<typeof createCli>,
+  cli: Awaited<ReturnType<typeof createCli>>,
   harness: Awaited<ReturnType<typeof createApplicationMcpHarness>>,
   application: ReturnType<typeof parseEvidence>,
   query: { readonly seed: unknown; readonly direction: string },
@@ -200,7 +200,7 @@ const assertTraceContextsResolve = (
 };
 
 const serveCli = async (
-  cli: ReturnType<typeof createCli>,
+  cli: Awaited<ReturnType<typeof createCli>>,
   arguments_: readonly string[],
 ): Promise<{ readonly stdout: string; readonly exitCode: number }> => {
   let stdout = "";

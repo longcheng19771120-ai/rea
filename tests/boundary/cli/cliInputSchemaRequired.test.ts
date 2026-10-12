@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { createCli } from "../../../src/cli.js";
 import { createCliInventory } from "../../../scripts/lib/catalog-cli.mjs";
 
-type CliInstance = ReturnType<typeof createCli>;
+type CliInstance = Awaited<ReturnType<typeof createCli>>;
 type CommandMap = NonNullable<ReturnType<typeof Cli.toCommands.get>>;
 
 const INPUT_GROUPS = ["args", "options"] as const;
@@ -65,7 +65,7 @@ const omissionRejected = (schema: z.ZodObject | undefined): string[] =>
 
 describe("CLI advertised input schemas", () => {
   it("require exactly the inputs whose omission the parser rejects", async () => {
-    const cli = createCli({});
+    const cli = await createCli({});
     const mismatches: string[] = [];
     for (const command of createCliInventory(cli).primary) {
       const advertised = await advertisedSchema(cli, command);
@@ -101,7 +101,7 @@ describe("CLI advertised input schemas", () => {
   });
 
   it("accepts the one-argument keyed-archive call and keeps its constraints", async () => {
-    const cli = createCli({});
+    const cli = await createCli({});
     const advertised = await advertisedSchema(cli, "inspect-keyed-archive");
     const ajv = new Ajv2020({ strict: false });
     const args = ajv.compile(advertised.args ?? {});
